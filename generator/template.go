@@ -23,13 +23,13 @@ func Push{{.Name}}(o {{.ObjType}}, a []{{.ObjType}}) []{{.ObjType}} {
 	return append(a, o)
 }
 func Pop{{.Name}}(a []{{.ObjType}}) ({{.ObjType}}, []{{.ObjType}}) {
-	return a[len(a)-1], append([]{{.ObjType}}{}, a[:len(a)-1]...)
+	return a[len(a)-1], append([]{{.ObjType}}(nil), a[:len(a)-1]...)
 }
 func Unshift{{.Name}}(o {{.ObjType}}, a []{{.ObjType}}) []{{.ObjType}} {
 	return append([]{{.ObjType}}{o}, a...)
 }
 func Shift{{.Name}}(a []{{.ObjType}}) ({{.ObjType}}, []{{.ObjType}}) {
-	return a[0], append([]{{.ObjType}}{}, a[1:]...)
+	return a[0], append([]{{.ObjType}}(nil), a[1:]...)
 }
 func Filter{{.Name}}(a []{{.ObjType}}, f func({{.ObjType}}) bool) []{{.ObjType}} {
 	b := a[:0]

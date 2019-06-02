@@ -17,13 +17,13 @@ func PushTestObj(o testObj, a []testObj) []testObj {
 	return append(a, o)
 }
 func PopTestObj(a []testObj) (testObj, []testObj) {
-	return a[len(a)-1], append([]testObj{}, a[:len(a)-1]...)
+	return a[len(a)-1], append([]testObj(nil), a[:len(a)-1]...)
 }
 func UnshiftTestObj(o testObj, a []testObj) []testObj {
 	return append([]testObj{o}, a...)
 }
 func ShiftTestObj(a []testObj) (testObj, []testObj) {
-	return a[0], append([]testObj{}, a[1:]...)
+	return a[0], append([]testObj(nil), a[1:]...)
 }
 func FilterTestObj(a []testObj, f func(testObj) bool) []testObj {
 	b := a[:0]
