@@ -7,10 +7,10 @@ A code generator that can generate slice tricks for a struct type.
 Pass in the slice type and run in the desired directory
 
 ```bash
-go run github.com/mazei513/slice-gen Gopher
+go run github.com/mazei513/slice-gen Droid
 ```
 
-That will create a file named `gopher_gen.go` in the same directory.
+That will create a file named `droid_gen.go` in the same directory.
 
 ## Functions created
 
