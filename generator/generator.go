@@ -14,12 +14,12 @@ import (
 
 type templateData struct {
 	Package string
-	Name    string
 	ObjType string
+	Name    string
 }
 
-func Generate(name, objType, wd string) error {
-	data, err := getData(name, objType, wd)
+func Generate(objType, wd string) error {
+	data, err := getData(objType, wd)
 	if err != nil {
 		return err
 	}
@@ -33,19 +33,17 @@ func Generate(name, objType, wd string) error {
 	return nil
 }
 
-func getData(name, objType, wd string) (templateData, error) {
-	var data templateData
-
+func getData(objType, wd string) (templateData, error) {
 	genPkg := getPackage(wd)
 	if genPkg == nil {
 		return templateData{}, fmt.Errorf("unable to find package info for " + wd)
 	}
 
-	data.Name = name
-	data.Package = genPkg.Name
-	data.ObjType = objType
-
-	return data, nil
+	return templateData{
+		Package: genPkg.Name,
+		ObjType: objType,
+		Name:    uppercaseFirst(objType),
+	}, nil
 }
 
 func getPackage(dir string) *packages.Package {
@@ -76,4 +74,8 @@ func writeTemplate(filepath string, data templateData) error {
 	}
 
 	return nil
+}
+
+func uppercaseFirst(s string) string {
+	return strings.ToUpper(s[:1]) + s[1:]
 }

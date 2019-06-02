@@ -8,21 +8,21 @@ import (
 )
 
 func main() {
-	if len(os.Args) != 3 {
-		fmt.Println("usage: github.com/mazei513/slice-gen {Name} {ObjType}")
-		fmt.Println(" example:")
-		fmt.Println(" github.com/mazei513/slice-gen User user'")
+	if len(os.Args) != 2 {
+		fmt.Println("invalid arguments given")
+		fmt.Println("example usage:")
+		fmt.Println("go run github.com/mazei513/slice-gen Gopher'")
 		os.Exit(1)
 	}
 
 	wd, err := os.Getwd()
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())
-		os.Exit(2)
+		os.Exit(1)
 	}
 
-	if err := generator.Generate(os.Args[1], os.Args[2], wd); err != nil {
+	if err := generator.Generate(os.Args[1], wd); err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())
-		os.Exit(2)
+		os.Exit(1)
 	}
 }

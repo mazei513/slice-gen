@@ -1,4 +1,4 @@
-//go:generate go run github.com/mazei513/slice-gen TestObj testObj
+//go:generate go run github.com/mazei513/slice-gen testObj
 
 package tests
 
