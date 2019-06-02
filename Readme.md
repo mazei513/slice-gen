@@ -4,6 +4,8 @@ A code generator that can generate slice tricks for a struct type.
 
 ## Usage
 
+### CLI
+
 Pass in the slice type and run in the desired directory
 
 ```bash
@@ -11,6 +13,20 @@ go run github.com/mazei513/slice-gen Droid
 ```
 
 That will create a file named `droid_gen.go` in the same directory.
+
+### Go Generate
+
+Add the following line at the top of a Go file to use with `go generate`. The example is for a file `droid.go`.
+
+```Go
+//go:generate go run github.com/mazei513/slice-gen Droid
+```
+
+In the same directory as the file, run:
+
+```bash
+go generate
+```
 
 ## Functions created
 
