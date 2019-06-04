@@ -37,7 +37,7 @@ func Shift{{.Name}}(a []{{.ObjType}}) ({{.ObjType}}, []{{.ObjType}}) {
 	return a[0], append([]{{.ObjType}}(nil), a[1:]...)
 }
 func Filter{{.Name}}(a []{{.ObjType}}, f func({{.ObjType}}) bool) []{{.ObjType}} {
-	b := a[:0]
+	b := make([]{{.ObjType}}, 0, len(a))
 	for _, x := range a {
 		if f(x) {
 			b = append(b, x)

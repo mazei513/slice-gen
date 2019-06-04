@@ -31,7 +31,7 @@ func ShiftString(a []string) (string, []string) {
 	return a[0], append([]string(nil), a[1:]...)
 }
 func FilterString(a []string, f func(string) bool) []string {
-	b := a[:0]
+	b := make([]string, 0, len(a))
 	for _, x := range a {
 		if f(x) {
 			b = append(b, x)

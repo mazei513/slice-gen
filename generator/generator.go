@@ -24,7 +24,7 @@ func Generate(objType, wd string) error {
 		return err
 	}
 
-	filename := strings.ToLower(data.Name) + "_gen.go"
+	filename := strings.ToLower(data.Name) + "_slicegen.go"
 
 	if err := writeTemplate(filepath.Join(wd, filename), data); err != nil {
 		return err

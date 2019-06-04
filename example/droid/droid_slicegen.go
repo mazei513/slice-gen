@@ -31,7 +31,7 @@ func ShiftDroid(a []Droid) (Droid, []Droid) {
 	return a[0], append([]Droid(nil), a[1:]...)
 }
 func FilterDroid(a []Droid, f func(Droid) bool) []Droid {
-	b := a[:0]
+	b := make([]Droid, 0, len(a))
 	for _, x := range a {
 		if f(x) {
 			b = append(b, x)
