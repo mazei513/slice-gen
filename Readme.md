@@ -43,6 +43,6 @@ Functions taken from https://github.com/golang/go/wiki/SliceTricks
 
 ## Further enhancements
 
-- Support for basic types
-- Support for pointer types
-- Add tests
+- Add tests for nil array situations
+- Add checks for valid arguments into slice functions
+- Error out of slice functions instead of panic
