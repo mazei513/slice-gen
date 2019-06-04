@@ -42,7 +42,7 @@ func getData(objType, wd string) (templateData, error) {
 	return templateData{
 		Package: genPkg.Name,
 		ObjType: objType,
-		Name:    uppercaseFirst(objType),
+		Name:    uppercaseFirst(stripPointer(objType)),
 	}, nil
 }
 
@@ -74,6 +74,10 @@ func writeTemplate(filepath string, data templateData) error {
 	}
 
 	return nil
+}
+
+func stripPointer(s string) string {
+	return strings.TrimLeft(s, "*")
 }
 
 func uppercaseFirst(s string) string {

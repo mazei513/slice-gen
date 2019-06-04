@@ -5,5 +5,4 @@ package droid
 type Droid struct {
 	Name    string
 	Version int
-	Owner   *string
 }
