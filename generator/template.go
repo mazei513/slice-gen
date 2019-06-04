@@ -8,13 +8,18 @@ var tpl = template.Must(template.New("generated").
 package {{.Package}}
 
 func Delete{{.Name}}(i int, a []{{.ObjType}}) []{{.ObjType}} {
-	return append(a[:i], a[i+1:]...)
+	s := make([]{{.ObjType}}, i, len(a)-1)
+	copy(s, a)
+	return append(s, a[i+1:]...)
 }
 func DeleteRange{{.Name}}(from, to int, a []{{.ObjType}}) []{{.ObjType}} {
-	return append(a[:from], a[to+1:]...)
+	s := make([]{{.ObjType}}, from, len(a)-(to-from))
+	copy(s, a)
+	return append(s, a[to+1:]...)
 }
 func Insert{{.Name}}(i int, o {{.ObjType}}, a []{{.ObjType}}) []{{.ObjType}} {
-	s := append(a, {{.ObjType}}{})
+	var zero {{.ObjType}}
+	s := append(a, zero)
 	copy(s[i+1:], a[i:])
 	s[i] = o
 	return s

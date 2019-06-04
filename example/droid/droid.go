@@ -1,6 +1,6 @@
 //go:generate go run github.com/mazei513/slice-gen Droid
 
-package example
+package droid
 
 type Droid struct {
 	Name    string
