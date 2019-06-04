@@ -1,0 +1,13 @@
+dist: xenial
+language: go
+go:
+  - 1.12.x
+env:
+  - GO111MODULE=on
+git:
+  depth: 1
+notifications:
+  email: false
+install: true
+script:
+  - go test -v -race ./...
