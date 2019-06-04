@@ -2,7 +2,6 @@ package generator
 
 import (
 	"bytes"
-	"fmt"
 	"io/ioutil"
 	"path/filepath"
 	"strings"
@@ -19,31 +18,33 @@ type templateData struct {
 }
 
 func Generate(objType, wd string) error {
-	data, err := getData(objType, wd)
+	if objType == "" || wd == "" {
+		return errors.New("invalid arguments")
+	}
+
+	pkg := getPackage(wd)
+	if pkg == nil {
+		return errors.Errorf("unable to find package info for " + wd)
+	}
+
+	d := templateData{
+		Package: pkg.Name,
+		ObjType: objType,
+		Name:    getNameFromObjType(objType),
+	}
+
+	path := getFilepath(wd, d.Name)
+
+	b, err := generateFileBytes(path, d)
 	if err != nil {
 		return err
 	}
 
-	filename := strings.ToLower(data.Name) + "_slicegen.go"
-
-	if err := writeTemplate(filepath.Join(wd, filename), data); err != nil {
+	if err := ioutil.WriteFile(path, b, 0644); err != nil {
 		return err
 	}
 
 	return nil
-}
-
-func getData(objType, wd string) (templateData, error) {
-	genPkg := getPackage(wd)
-	if genPkg == nil {
-		return templateData{}, fmt.Errorf("unable to find package info for " + wd)
-	}
-
-	return templateData{
-		Package: genPkg.Name,
-		ObjType: objType,
-		Name:    uppercaseFirst(stripPointer(objType)),
-	}, nil
 }
 
 func getPackage(dir string) *packages.Package {
@@ -58,28 +59,25 @@ func getPackage(dir string) *packages.Package {
 	return p[0]
 }
 
-func writeTemplate(filepath string, data templateData) error {
+func getNameFromObjType(s string) string {
+	s = strings.TrimLeft(s, "*")
+	return strings.ToUpper(s[:1]) + s[1:]
+}
+
+func getFilepath(wd, name string) string {
+	fn := strings.ToLower(name) + "_slicegen.go"
+	return filepath.Join(wd, fn)
+}
+
+func generateFileBytes(filepath string, data templateData) ([]byte, error) {
 	var buf bytes.Buffer
 	if err := tpl.Execute(&buf, data); err != nil {
-		return errors.Wrap(err, "generating code")
+		return nil, errors.Wrap(err, "generating code")
 	}
 
 	src, err := imports.Process(filepath, buf.Bytes(), nil)
 	if err != nil {
-		return errors.Wrap(err, "unable to gofmt")
+		return nil, errors.Wrap(err, "unable to gofmt")
 	}
-
-	if err := ioutil.WriteFile(filepath, src, 0644); err != nil {
-		return errors.Wrap(err, "writing output")
-	}
-
-	return nil
-}
-
-func stripPointer(s string) string {
-	return strings.TrimLeft(s, "*")
-}
-
-func uppercaseFirst(s string) string {
-	return strings.ToUpper(s[:1]) + s[1:]
+	return src, nil
 }
