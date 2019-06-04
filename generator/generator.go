@@ -12,28 +12,28 @@ import (
 )
 
 type templateData struct {
-	Package string
-	ObjType string
-	Name    string
+	Package  string
+	TypeName string
+	Name     string
 }
 
-func Generate(objType, wd string) error {
-	if objType == "" || wd == "" {
+func Generate(typeName, dir string) error {
+	if typeName == "" || dir == "" {
 		return errors.New("invalid arguments")
 	}
 
-	pkg := getPackage(wd)
-	if pkg == nil {
-		return errors.Errorf("unable to find package info for " + wd)
+	pkg, err := getPackage(dir)
+	if err != nil {
+		return err
 	}
 
 	d := templateData{
-		Package: pkg.Name,
-		ObjType: objType,
-		Name:    getNameFromObjType(objType),
+		Package:  pkg.Name,
+		TypeName: typeName,
+		Name:     getNameFromObjType(typeName),
 	}
 
-	path := getFilepath(wd, d.Name)
+	path := getFilepath(dir, d.Name)
 
 	b, err := generateFileBytes(path, d)
 	if err != nil {
@@ -47,16 +47,19 @@ func Generate(objType, wd string) error {
 	return nil
 }
 
-func getPackage(dir string) *packages.Package {
-	p, _ := packages.Load(&packages.Config{
+func getPackage(dir string) (*packages.Package, error) {
+	p, err := packages.Load(&packages.Config{
 		Dir: dir,
 	}, ".")
-
-	if len(p) != 1 {
-		return nil
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to load package info")
 	}
 
-	return p[0]
+	if len(p) != 1 {
+		return nil, errors.Errorf("invalid directory given (%s)", dir)
+	}
+
+	return p[0], nil
 }
 
 func getNameFromObjType(s string) string {
@@ -64,20 +67,20 @@ func getNameFromObjType(s string) string {
 	return strings.ToUpper(s[:1]) + s[1:]
 }
 
-func getFilepath(wd, name string) string {
+func getFilepath(dir, name string) string {
 	fn := strings.ToLower(name) + "_slicegen.go"
-	return filepath.Join(wd, fn)
+	return filepath.Join(dir, fn)
 }
 
-func generateFileBytes(filepath string, data templateData) ([]byte, error) {
+func generateFileBytes(filename string, data templateData) ([]byte, error) {
 	var buf bytes.Buffer
 	if err := tpl.Execute(&buf, data); err != nil {
-		return nil, errors.Wrap(err, "generating code")
+		return nil, errors.Wrap(err, "failed to execute template")
 	}
 
-	src, err := imports.Process(filepath, buf.Bytes(), nil)
+	src, err := imports.Process(filename, buf.Bytes(), nil)
 	if err != nil {
-		return nil, errors.Wrap(err, "unable to gofmt")
+		return nil, errors.Wrap(err, "failed to format file")
 	}
 	return src, nil
 }
