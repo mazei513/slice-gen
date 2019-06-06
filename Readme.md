@@ -2,7 +2,7 @@
 
 
 [![Build Status](https://travis-ci.com/mazei513/slice-gen.svg?branch=master)](https://travis-ci.com/mazei513/slice-gen)
-[![Coverage Status](https://coveralls.io/repos/github/mazei513/slice-gen/badge.svg?branch=master)](https://coveralls.io/github/mazei513/slice-gen)
+[![Coverage Status](https://coveralls.io/repos/github/mazei513/slice-gen/badge.svg?branch=master)](https://coveralls.io/github/mazei513/slice-gen?branch=master)
 
 A code generator that can generate slice tricks for a struct type.
 
