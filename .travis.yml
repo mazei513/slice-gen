@@ -8,6 +8,8 @@ git:
   depth: 1
 notifications:
   email: false
+before_install:
+  - go get github.com/mattn/goveralls
 install: true
 script:
-  - go test -v -race ./...
+  - $GOPATH/bin/goveralls -service=travis-ci
